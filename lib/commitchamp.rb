@@ -32,14 +32,16 @@ module Commitchamp
       selection = STDIN.gets.chomp
       if selection == "a"
         data = @user_data.sort_by {|value| value[:a]}
-        table(data)                                     # need a way to display newly sorted table 
+        table(data)                                     
         #binding.pry
       end
       if selection == "d"
-        d = @user_data.sort_by {|value| value[:d]}
+        data = @user_data.sort_by {|value| value[:d]}
+        table(data)
       end
       if selection == "t"
         t = @user_data.sort_by {|value| value[:t]}
+        table(data)
       end
       #binding.pry
     end                                              
