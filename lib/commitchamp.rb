@@ -31,8 +31,8 @@ module Commitchamp
       puts "Please select a, d, or t"
       selection = STDIN.gets.chomp
       if selection == "a"
-        a = @user_data.sort_by {|value| value[:a]}
-        table(a)                                     # need a way to display newly sorted table 
+        data = @user_data.sort_by {|value| value[:a]}
+        table(data)                                     # need a way to display newly sorted table 
         #binding.pry
       end
       if selection == "d"
@@ -44,8 +44,8 @@ module Commitchamp
       #binding.pry
     end                                              
 
-    def table(sort)
-      @user_data.each do |info|
+    def table(data)
+      data.each do |info|
         print(info[:user], info[:a], info[:d], info[:c], info[:t]) # Find fix: display looks bad
       end
     end
