@@ -7,15 +7,28 @@ require "commitchamp/github_api"
 module Commitchamp
   class App
     def initialize
-      @weeks 
+      @table
+      @results
     end
 
     def run
-      #table = {:username => "", :additions => "", :deletions => "", :changes => "" }
-      table = Array.new
-      additions = Array.new
-      
+      @user_data = []
+      get_repo
 
+      @results.each do |result|
+        username = result["author"]["login"]
+        additions = result["weeks"].inject(0) {|sum, key| sum + key["a"]} # must pass 0 to inject method to work?
+        deletions = result["weeks"].inject(0) {|sum, key| sum + key["d"]}
+        commits = result["weeks"].inject(0) {|sum, key| sum + key["c"]}
+        total_commits = additions + deletions + commits 
+        @user_data.push ({user: username, a: additions, d: deletions, c: commits, t: total_commits}) # Just create another array of hashes...
+        binding.pry
+      end
+    
+        #sum = additions.inject {|sum, n| sum + n} 
+    end                                              
+
+    def get_repo
       puts "Please enter your authentication token:"
       token = STDIN.gets.chomp
       auth = Githubapi.new(token)
@@ -26,25 +39,9 @@ module Commitchamp
       puts "Please enter the repo you are interested in viewing:"
       repo = STDIN.gets.chomp
 
-      results = auth.get_contributions(owner, repo)  
-
-      results.each do |result|
-        username = result["author"]["login"]
-        @weeks = result["weeks"]
-        table.push(username)
-        #binding.pry
-      end
-    
-      @weeks.each do |week|
-       add = week["a"]
-       delete = week["d"]
-       commit = week["c"]
-       #additions.push(add)
-        binding.pry
-      end
-        sum = additions.inject {|sum, n| sum + n}
-        #binding.pry
-    end
+      @results = auth.get_contributions(owner, repo)
+    end 
+                                                       
   end
 end
 
@@ -66,5 +63,5 @@ app.run
 # Once all the contributions have been collected for a repo, offer to sort them by:
 # 1) lines added 2) lines deleted 3) total lines changed 4) commits made
 
-
+# Hash with usernames as keys for building up the table.
 
