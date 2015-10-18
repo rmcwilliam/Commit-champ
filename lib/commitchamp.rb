@@ -7,8 +7,6 @@ require "commitchamp/github_api"
 module Commitchamp
   class App
     def initialize
-      @table
-      @results
     end
 
     def run
@@ -22,11 +20,35 @@ module Commitchamp
         commits = result["weeks"].inject(0) {|sum, key| sum + key["c"]}
         total_commits = additions + deletions + commits 
         @user_data.push ({user: username, a: additions, d: deletions, c: commits, t: total_commits}) # Just create another array of hashes...
-        binding.pry
+        #binding.pry
       end
-    
-        #sum = additions.inject {|sum, n| sum + n} 
+      table(@user_data)
+      sort_data
+    end
+
+    def sort_data
+      puts "Would you like to sort the data by additions: a, deletions: d, or total commits: t?"
+      puts "Please select a, d, or t"
+      selection = STDIN.gets.chomp
+      if selection == "a"
+        a = @user_data.sort_by {|value| value[:a]}
+        table(a)                                     # need a way to display newly sorted table 
+        #binding.pry
+      end
+      if selection == "d"
+        d = @user_data.sort_by {|value| value[:d]}
+      end
+      if selection == "t"
+        t = @user_data.sort_by {|value| value[:t]}
+      end
+      #binding.pry
     end                                              
+
+    def table(sort)
+      @user_data.each do |info|
+        print(info[:user], info[:a], info[:d], info[:c], info[:t]) # Find fix: display looks bad
+      end
+    end
 
     def get_repo
       puts "Please enter your authentication token:"
