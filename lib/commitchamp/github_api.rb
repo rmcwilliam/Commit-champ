@@ -14,7 +14,6 @@ module Commitchamp
           }
       end
 
-      #GET /repos/:owner/:repo/stats/contributors
       def get_contributions(owner, repo)
         Githubapi.get("/repos/#{owner}/#{repo}/stats/contributors", :header => @auth)
       end
