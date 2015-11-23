@@ -15,9 +15,9 @@ module Commitchamp
 
       @results.each do |result|
         username = result["author"]["login"]
-        additions = result["weeks"].inject(0) {|sum, key| sum + key["a"]} # must pass 0 to inject method to work?
-        deletions = result["weeks"].inject(0) {|sum, key| sum + key["d"]}
-        commits = result["weeks"].inject(0) {|sum, key| sum + key["c"]}
+        additions = result["weeks"].inject(0) {|sum, key| sum + key["a"]} # Must pass 0 to inject method to work?
+        deletions = result["weeks"].inject(0) {|sum, key| sum + key["d"]} # Zero is the starting point for inject!!
+        commits = result["weeks"].inject(0) {|sum, key| sum + key["c"]} # If you don't, first vaue encountered will be starting point.
         total_lines_changed = additions + deletions  
         @user_data.push ({user: username, a: additions, d: deletions, c: commits, t: total_lines_changed}) # Just create another array of hashes...
       end
